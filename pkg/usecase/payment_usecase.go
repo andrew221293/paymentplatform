@@ -21,10 +21,10 @@ type PaymentUsecase interface {
 
 type paymentUsecase struct {
 	paymentRepo repository.PaymentRepository
-	bankClient  *infra.BankClient
+	bankClient  infra.BankClient
 }
 
-func NewPaymentUsecase(paymentRepo repository.PaymentRepository, bankClient *infra.BankClient) PaymentUsecase {
+func NewPaymentUsecase(paymentRepo repository.PaymentRepository, bankClient infra.BankClient) PaymentUsecase {
 	return &paymentUsecase{
 		paymentRepo: paymentRepo,
 		bankClient:  bankClient,

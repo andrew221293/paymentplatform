@@ -5,21 +5,28 @@ import (
 	"paymentplatform/pkg/entity"
 )
 
-type BankClient struct {
+//go:generate mockgen -source=bank_client.go -destination=mocks/back_client_mock.go -package=mocks
+
+type BankClient interface {
+	ProcessPayment(ctx context.Context, paymentDetails entity.PaymentDetails) (entity.PaymentResponse, error)
+	ProcessRefund(ctx context.Context, refundDetails entity.RefundDetails) (entity.RefundResponse, error)
 }
 
-func NewBankClient() *BankClient {
-	return &BankClient{}
+type bankClient struct {
 }
 
-func (bc *BankClient) ProcessPayment(ctx context.Context, paymentDetails entity.PaymentDetails) (entity.PaymentResponse, error) {
+func NewBankClient() BankClient {
+	return &bankClient{}
+}
+
+func (bc *bankClient) ProcessPayment(ctx context.Context, paymentDetails entity.PaymentDetails) (entity.PaymentResponse, error) {
 	return entity.PaymentResponse{
 		Success: true,
 		Message: "Payment processed successfully",
 	}, nil
 }
 
-func (bc *BankClient) ProcessRefund(ctx context.Context, refundDetails entity.RefundDetails) (entity.RefundResponse, error) {
+func (bc *bankClient) ProcessRefund(ctx context.Context, refundDetails entity.RefundDetails) (entity.RefundResponse, error) {
 	return entity.RefundResponse{
 		Success: true,
 		Message: "Refund processed successfully",
