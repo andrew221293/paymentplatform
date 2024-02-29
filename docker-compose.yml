@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: "payment_platform_db"
+    environment:
+      POSTGRES_USER: "developer"
+      POSTGRES_PASSWORD: "test123"
+      POSTGRES_DB: "payment_platform"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+volumes:
+  db_data:

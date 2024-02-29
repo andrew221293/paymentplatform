@@ -1,0 +1,150 @@
+swagger: '2.0'
+info:
+  title: Payment Platform API
+  description: API for processing payments, refunds, and checking system health
+  version: 1.0.0
+host: localhost:8080
+schemes:
+  - http
+basePath: /
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Checks the health of the service
+      responses:
+        200:
+          description: OK
+  /payments:
+    post:
+      summary: Process a new payment
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Merchant-ID
+          type: integer
+          required: true
+        - in: header
+          name: Customer-ID
+          type: integer
+          required: true
+        - in: body
+          name: paymentDetails
+          required: true
+          schema:
+            $ref: '#/definitions/PaymentDetails'
+      responses:
+        200:
+          description: Payment processed successfully
+          schema:
+            type: string
+        400:
+          description: Invalid request
+        500:
+          description: Internal server error
+  /payments/{payment_id}:
+    get:
+      summary: Get Payment Details
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: payment_id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Payment'
+        400:
+          description: Invalid Payment ID
+        404:
+          description: Payment not found
+        500:
+          description: Internal server error
+  /payments/{payment_id}/refund:
+    patch:
+      summary: Process a refund for a specific payment
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: payment_id
+          type: integer
+          required: true
+        - in: header
+          name: Merchant-ID
+          type: integer
+          required: true
+        - in: header
+          name: Customer-ID
+          type: integer
+          required: true
+        - in: body
+          name: refundDetails
+          required: true
+          schema:
+            $ref: '#/definitions/RefundDetails'
+      responses:
+        200:
+          description: Refund processed successfully
+          schema:
+            type: string
+        400:
+          description: Invalid request
+        500:
+          description: Internal server error
+definitions:
+  PaymentDetails:
+    type: object
+    properties:
+      Amount:
+        type: number
+        format: float
+      Currency:
+        type: string
+      CardNumber:
+        type: string
+      CVV:
+        type: string
+      ExpiryDate:
+        type: string
+  RefundDetails:
+    type: object
+    properties:
+      Amount:
+        type: number
+        format: float
+  Payment:
+    type: object
+    required:
+      - ID
+      - MerchantID
+      - CustomerID
+      - Amount
+      - Currency
+      - Status
+      - CreatedAt
+    properties:
+      ID:
+        type: integer
+      MerchantID:
+        type: integer
+      CustomerID:
+        type: integer
+      Amount:
+        type: number
+        format: float
+      Currency:
+        type: string
+      Status:
+        type: string
+      CreatedAt:
+        type: string
+        format: date-time
