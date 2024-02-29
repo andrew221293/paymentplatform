@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"paymentplatform/pkg/entity"
@@ -41,8 +40,8 @@ func (uc *paymentUsecase) ProcessPayment(ctx context.Context, paymentDetails ent
 	}
 
 	payment := &entity.Payment{
-		MerchantID: generateRandomID(),
-		CustomerID: generateRandomID(),
+		MerchantID: merchantID,
+		CustomerID: customerID,
 		Amount:     paymentDetails.Amount,
 		Currency:   paymentDetails.Currency,
 		Status:     "Processed",
@@ -77,9 +76,4 @@ func (uc *paymentUsecase) ProcessRefund(ctx context.Context, refundDetails entit
 		CreatedAt: time.Now(),
 	}
 	return uc.paymentRepo.SaveRefund(ctx, refund)
-}
-
-func generateRandomID() int {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return r.Intn(90000) + 10000
 }

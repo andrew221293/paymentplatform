@@ -7,7 +7,7 @@ import (
 	"github.com/uptrace/bunrouter"
 )
 
-func healthCheckHandler(w http.ResponseWriter, _ bunrouter.Request) error {
+func HealthCheckHandler(w http.ResponseWriter, _ bunrouter.Request) error {
 	fmt.Println("Hello, World!")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))
